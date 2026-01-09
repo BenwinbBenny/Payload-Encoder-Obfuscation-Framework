@@ -96,13 +96,22 @@ Each component is independent and replaceable.
 ## 5. Project Structure
 
 ```
-modules/
-├── __init__.py
-├── run.py               # Entry point
-├── encoder_engine.py     # Encoding logic
-├── masker.py             # Obfuscation logic
-├── scanner.py            # Detection logic
-└── audit_log.py          # Reporting & logging
+Payload-Encoder-Obfuscation-Framework/
+│
+├── modules/
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── audit_log.py       # Reporting & logging
+│   │   ├── encoder_engine.py  # Encoding logic
+│   │   ├── masker.py          # Obfuscation logic
+│   │   └── scanner.py         # Detection logic
+│   │
+│   └── run.py                 # Entry point
+│
+├── LICENSE
+├── README.md
+└── outputresults.md
+
 ```
 
 ---
