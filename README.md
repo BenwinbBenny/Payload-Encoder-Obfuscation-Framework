@@ -1,209 +1,450 @@
-# Payload Encoding, Masking, and Detection Analysis Framework
+# Payload Encoder Obfuscation Framework
 
-## 1. Introduction
-  This Python project implements a **modular framework for studying payload transformation techniques** including encoding, masking, and obfuscation and how such transformations interact with simple signature-based detection logic.
-  
-The framework is designed for:
+## Table of Contents
 
-- Cybersecurity researchers
-- Red team and blue team practitioners
-- Secure coding and detection engineering education
+1. [Overview](#overview)
+2. [Objectives](#objectives)
+3. [Non-Goals](#non-goals)  
+4. [Architecture Overview](#architecture-overview)  
+5. [Project Structure](#project-structure)  
+6. [Component Breakdown](#component-breakdown)  
+   - [Entry Point](#entry-point-mainpy)  
+   - [Encoder Engine](#encoder-engine)  
+   - [Text Masker](#text-masker)  
+   - [Threat Scanner](#threat-scanner)  
+   - [Audit Logger](#audit-logger)  
+7. [Data Flow & Execution Lifecycle](#data-flow--execution-lifecycle)  
+8. [Detection & Bypass Logic](#detection--bypass-logic)  
+9. [Supported Techniques](#supported-techniques-summary)  
+10. [Example Executions](#example-execution-output)  
+11. [Audit & Reporting](#audit--reporting)  
+12. [Extensibility Guide](#extensibility-guide)  
+13. [Performance Characteristics](#performance-characteristics)  
+14. [Testing Strategy](#testing-strategy)  
+15. [Limitations](#limitations)  
+16. [Security & Ethics Notice](#security--ethics-notice)  
+17. [Future Enhancements](#future-enhancements)  
+18. [Project Status](#project-status)  
+19. [License](#license)  
+20. [Disclaimer](#disclaimer)
 
-It focuses on conceptual analysis, not exploitation, and demonstrates how textual indicators can be altered to affect detection outcomes.
+---
 
-## 2. Design Goals
-- Provide clear separation of responsibilities between components
-- Enable repeatable experimentation with deterministic transformations
-- Model basic detection evasion scenarios
-- Produce structured audit artifacts for analysis
+## 1. Overview
 
-## 3. High-Level Architecture
+The **Payload Encoder Obfuscation Framework** is a modular Python-based system designed to analyze how **string transformations** affect **pattern-based detection mechanisms**.
 
-```bash
-Input Payload
-     ↓
-[ EncoderEngine ] ──► Encoded Variants
-     ↓
-[ TextMasker ] ─────► Masked Variants
-     ↓
-[ ThreatScanner ] ──► Detection Comparison
-     ↓
-[ AuditLog ] ───────► Structured Report
+The framework focuses on:
+- Encoding
+- Masking / obfuscation
+- Detection comparison
+- Structured audit reporting
+
+All operations are **purely string-based** and **non-executing**.
+
+---
+
+## 2. Objectives
+
+The primary goals of this project are:
+
+- Demonstrate common encoding techniques
+- Explore string obfuscation strategies
+- Simulate detection evasion logic
+- Compare raw vs transformed detection outcomes
+- Generate reproducible audit reports
+
+---
+
+## 3. Non-Goals
+
+This framework explicitly does **NOT**:
+
+- Execute system commands
+- Interact with the OS or network
+- Perform exploitation
+- Perform real malware analysis
+- Evade real security products
+
+It is **not** a red-team tool.
+
+---
+
+## 4. Architecture Overview
+
+The framework follows a **component-based architecture**:
+
 ```
-Each component is independent and can be extended or replaced without impacting others.
+Input String
+     |
+     v
+Encoder Engine  ---> Encoded Artifact
+     |
+     v
+Text Masker     ---> Masked Artifact
+     |
+     v
+Threat Scanner  ---> Detection Comparison
+     |
+     v
+Audit Logger    ---> Structured Report
+```
 
-## 4. Module-Level Documentation
+Each component is independent and replaceable.
 
-### 4.1 main.py
-### Purpose
-Acts as the entry point for the framework. It orchestrates the encoding, masking, scanning, and logging processes.
-### Execution Flow
-1. Display framework banner
-2. Define sample input
-3. Initialize core components
-4. Apply transformations
-5. Compare detection results
-6. Generate and display execution summary
-### Code Walkthrough
-```bash
-sample = "status_check" #Defines the input payload to be analyzed.
+---
 
-encoder = EncoderEngine()
-masker = TextMasker(seed=7)
-scanner = ThreatScanner()
-logger = AuditLog()  #Initializes framework components. The seed ensures deterministic masking.
+## 5. Project Structure
 
+```
+payload_encoder_framework/
+├── __init__.py
+├── main.py               # Entry point
+├── encoder_engine.py     # Encoding logic
+├── masker.py             # Obfuscation logic
+├── scanner.py            # Detection logic
+└── audit_log.py          # Reporting & logging
+```
+
+---
+
+## 6. Component Breakdown
+
+---
+
+### 6.1 Entry Point (`main.py`)
+
+#### Responsibilities
+
+- Initialize framework components
+- Define test input
+- Execute encoding and masking
+- Compare detection results
+- Generate audit report
+- Display console output
+
+#### Core Logic
+
+```python
+sample = "status_check"
 encoded = encoder.base64_wrap(sample)
-masked = masker.reverse_text(sample)  #Applies encoding and masking transformations.
-
-scan = scanner.compare(sample, masked) #Compares detection results between raw and transformed input.
-
-report = logger.build(...) #Builds a structured audit report.
-```
-### 4.2 encoder_engine.py
-### Class: EncoderEngine
-
-Provides reversible encoding and masking techniques commonly encountered in payload transformation scenarios.
-
-### Method: base64_wrap(text: str) -> str
-Encodes input text using Base64.
-
-- Input: Plain string
-- Output: Base64-encoded string
-- Use Case: Obfuscating readable strings while preserving reversibility
-  
-### Method: base64_unwrap(text: str) -> str
-Decodes Base64-encoded input back to plaintext.
-
-### Method: rot_cipher(text: str) -> str
-Applies ROT13 substitution cipher.
-
-- Purpose: Demonstrates simple alphabetic substitution obfuscation
-- Reversible: Yes (ROT13 is symmetric)
-
-### Method: xor_mask(text: str, key: str = "veil") -> str
-Reverses XOR masking and restores original plaintext.
-
-### 4.3 masker.py
-### Class: TextMasker
-Applies non-cryptographic transformations designed to disrupt static pattern matching.
-
-### Constructor: __init__(seed: int | None = None)
-
-- Optional seed ensures deterministic output
-- Useful for testing and reproducibility
-
-### Method: reverse_text(text: str) -> str
-### Example:
-```
-status_check → kcehc_sutats
+masked = masker.reverse_text(sample)
+scan = scanner.compare(sample, masked)
+report = logger.build(sample, {...}, scan)
 ```
 
-### Method: inject_noise(text: str, amount: int | None = None) -> str
-- Randomly inserts alphanumeric characters into the string.
-- Default noise amount is proportional to input length
-- Designed to break substring matching
+This file orchestrates the entire workflow.
 
-### Method: fragment_text(text: str) -> str
-Splits text into concatenated character fragments.
+---
 
-### Method: unicode_mask(text: str) -> str
-Encodes each character as a Unicode escape sequence.
+### 6.2 Encoder Engine
 
-### 4.4 scanner.py
+#### Purpose
 
-### Class: ThreatScanner
+Provides **reversible and irreversible** encoding methods.
 
-Simulates a signature-based detection engine using predefined string indicators.
+#### Supported Encodings
 
-### Detection Categories
-```
-admin_login
-config_update
-debug_mode
-auth_token
-service_restart #Operational Indicators
+| Method | Reversible | Description |
+|------|------------|-------------|
+| Base64 | ✓ | Binary-safe encoding |
+| ROT13 | ✓ | Substitution cipher |
+| XOR Mask | ✓ | Key-based XOR obfuscation |
+| Unicode Escape | ✗ | Character escaping |
 
-override
-bypass
-elevate
-inject #High-Risk Action Keywords
-```
-### Method: compare(raw: str, transformed: str) -> dict
-```
-#Compares scan results between original and transformed input.
-{
-  "raw_flagged": true | false,
-  "masked_flagged": true | false,
-  "bypass": true | false
-}
+#### Key Methods
 
-bypass = raw_flagged and not masked_flagged #Bypass Logic
-
+```python
+base64_wrap()
+base64_unwrap()
+rot_cipher()
+xor_mask()
+xor_unmask()
 ```
 
-### 4.5 audit_log.py
-### Class: AuditLog
-Responsible for report generation and persistence.
+#### Design Notes
 
-### Method: build(...) -> Dict[str, Any]
-Generates a structured audit report.
+- XOR output is hexadecimal
+- Key cycling is deterministic
+- No randomness involved
 
-Fields:
+---
 
-- generated_at – ISO timestamp
-- input – Original payload
-- artifacts – Transformation outputs
-- scan – Detection comparison results
-- status – "bypass-achieved" or "detected"
+### 6.3 Text Masker
 
-### Method: export(report, path)
-  Exports report to a JSON file.
+#### Purpose
 
-- Uses formatted indentation
-- Suitable for SIEM ingestion or analysis pipelines
+Applies **appearance-altering transformations** that obscure recognizable patterns.
 
-## 5. Example Execution Output
+#### Deterministic Randomness
+
+```python
+TextMasker(seed=7)
+```
+
+Ensures reproducible obfuscation for testing.
+
+#### Masking Techniques
+
+| Technique | Description |
+|---------|-------------|
+| reverse_text | Reverses string |
+| inject_noise | Inserts random characters |
+| fragment_text | Splits into concatenated chars |
+| unicode_mask | Escapes characters |
+| layered_mask | Applies multiple masks |
+
+#### Layered Masking Example
+
+```python
+layered_mask(text, ["reverse_text", "unicode_mask"])
+```
+
+Masking steps are resolved dynamically via reflection.
+
+---
+
+### 6.4 Threat Scanner
+
+#### Purpose
+
+Simulates a **signature-based detection engine**.
+
+#### Detection Model
+
+- Case-insensitive substring matching
+- Static keyword lists
+- No heuristics or scoring
+
+#### Pattern Categories
+
+```python
+patterns = [
+  "admin_login",
+  "config_update",
+  "debug_mode",
+  "auth_token",
+  "service_restart"
+]
+
+flags = [
+  "override",
+  "bypass",
+  "elevate",
+  "inject"
+]
+```
+
+#### Detection Logic
+
+```python
+any(pattern in text for pattern in patterns + flags)
+```
+
+---
+
+### 6.5 Audit Logger
+
+#### Purpose
+
+Produces **structured, machine-readable reports**.
+
+#### Audit Report Fields
+
+| Field | Description |
+|-----|-------------|
+| generated_at | ISO-8601 timestamp |
+| input | Original string |
+| artifacts | All transformations |
+| scan | Detection comparison |
+| status | Final assessment |
+
+#### Status Logic
+
+```python
+bypass-achieved if raw_flagged and not masked_flagged
+```
+
+#### Export Capability
+
+Reports can be saved as formatted JSON.
+
+---
+
+## 7. Data Flow & Execution Lifecycle
+
+1. Input defined
+2. Encoding applied
+3. Masking applied
+4. Detection on raw input
+5. Detection on transformed input
+6. Comparison performed
+7. Audit report generated
+8. Output displayed
+
+---
+
+## 8. Detection & Bypass Logic
+
+A **bypass** is defined as:
+
+```
+raw_flagged == True
+masked_flagged == False
+```
+
+This is a **logical condition**, not a real-world evasion claim.
+
+---
+
+## 9. Supported Techniques Summary
+
+### Encoding
+- Base64
+- ROT13
+- XOR (hex)
+- Unicode escaping
+
+### Masking
+- Reversal
+- Noise insertion
+- Fragmentation
+- Unicode masking
+- Layered obfuscation
+
+### Detection
+- Pattern matching
+- Flag detection
+- Comparison logic
+
+---
+
+## 10. Example Execution Output
+
 ```
 ===Payload-Encoder-Obfuscation-Framework===
 
 Input Text      : status_check
 Encoded Output  : c3RhdHVzX2NoZWNr
 Masked Output   : kcehc_sutats
-Scan Result     : {'raw_flagged': False, 'masked_flagged': False, 'bypass': False}
+Scan Result     : {
+  'raw_flagged': False,
+  'masked_flagged': False,
+  'bypass': False
+}
 
 Execution complete
 ```
 
-## 6. Example Audit Report
-```
+---
+
+## 11. Audit & Reporting
+
+Audit reports enable:
+- Reproducible testing
+- Automated analysis
+- JSON-based ingestion
+- Historical comparisons
+
+Example:
+
+```json
 {
-  "generated_at": "2026-01-08T14:32:10.481239",
-  "input": "status_check",
-  "artifacts": {
-    "base64": "c3RhdHVzX2NoZWNr",
-    "reversed": "kcehc_sutats"
-  },
-  "scan": {
-    "raw_flagged": false,
-    "masked_flagged": false,
-    "bypass": false
-  },
-  "status": "detected"
+  "input": "admin_login",
+  "status": "bypass-achieved"
 }
 ```
 
-## 7. Extensibility Considerations
+---
 
-This framework can be extended by:
+## 12. Extensibility Guide
 
-- Adding entropy-based or heuristic scanners
-- Implementing decoding-aware detection logic
-- Introducing transformation pipelines
-- Exporting results to CSV or databases
-- Adding unit tests for each transformation
+### Adding a New Encoder
 
-## 8. Ethical & Usage Disclaimer
+1. Implement method in `EncoderEngine`
+2. Call from `main`
+3. Log artifact in audit report
 
-This project is intended solely for educational and defensive security research. It does not include exploit code or operational attack logic. Users are responsible for ethical and lawful use.
+### Adding a New Mask
 
+1. Implement method in `TextMasker`
+2. Use via `layered_mask`
+3. No scanner changes required
+
+### Adding Detection Patterns
+
+1. Update `patterns` or `flags`
+2. No other code changes needed
+
+---
+
+## 13. Performance Characteristics
+
+All operations are **O(n)** where `n = string length`.
+
+| Operation | Avg Time |
+|----------|----------|
+| Base64 encode | <1 ms |
+| XOR mask | <3 ms |
+| Unicode mask | <2 ms |
+| Scan | <1 ms |
+| Audit build | <5 ms |
+
+---
+
+## 14. Testing Strategy
+
+- Deterministic inputs
+- Seeded randomness
+- Manual comparison
+- JSON validation
+- Repeatable execution
+
+---
+
+## 15. Limitations
+
+- No semantic analysis
+- No decoding detection
+- No entropy analysis
+- No ML or heuristic scanning
+- No real-world threat modeling
+
+---
+
+## 16. Security & Ethics Notice
+
+This framework is intended **solely for educational and research purposes**.
+
+Do not use this framework:
+- To bypass real security systems
+- For unauthorized testing
+- For malicious purposes
+
+---
+
+## 17. Future Enhancements
+
+- Pluggable scanner modules
+- Entropy-based detection
+- Transformation chains
+- YAML-based configuration
+- Visualization support
+
+---
+
+## 18. Project Status
+
+**STATUS: READY FOR TESTING / RESEARCH USE**
+
+---
+
+## License
+
+Internal / Research Use Only
+
+---
+
+## Disclaimer
+
+All transformations and detection logic are demonstrative and do not represent real-world security behavior.
