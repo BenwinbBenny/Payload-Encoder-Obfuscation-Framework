@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Objectives](#objectives)
+1. [Overview](#Overview)  
+2. [Objectives](#objectives)  
 3. [Non-Goals](#non-goals)  
 4. [Architecture Overview](#architecture-overview)  
 5. [Project Structure](#project-structure)  
@@ -13,21 +13,20 @@
    - [Text Masker](#text-masker)  
    - [Threat Scanner](#threat-scanner)  
    - [Audit Logger](#audit-logger)  
-7. [Data Flow & Execution Lifecycle](#data-flow--execution-lifecycle)  
-8. [Detection & Bypass Logic](#detection--bypass-logic)  
+7. [Data Flow & Execution Lifecycle](#data-flow-execution-lifecycle)  
+8. [Detection & Bypass Logic](#detection-bypass-logic)  
 9. [Supported Techniques](#supported-techniques-summary)  
 10. [Example Executions](#example-execution-output)  
-11. [Audit & Reporting](#audit--reporting)  
+11. [Audit & Reporting](#audit-reporting)  
 12. [Extensibility Guide](#extensibility-guide)  
 13. [Performance Characteristics](#performance-characteristics)  
 14. [Testing Strategy](#testing-strategy)  
 15. [Limitations](#limitations)  
-16. [Security & Ethics Notice](#security--ethics-notice)  
+16. [Security & Ethics Notice](#security-ethics-notice)  
 17. [Future Enhancements](#future-enhancements)  
 18. [Project Status](#project-status)  
 19. [License](#license)  
 20. [Disclaimer](#disclaimer)
-
 ---
 
 ## 1. Overview
@@ -97,9 +96,9 @@ Each component is independent and replaceable.
 ## 5. Project Structure
 
 ```
-payload_encoder_framework/
+modules/
 ├── __init__.py
-├── main.py               # Entry point
+├── run.py               # Entry point
 ├── encoder_engine.py     # Encoding logic
 ├── masker.py             # Obfuscation logic
 ├── scanner.py            # Detection logic
@@ -112,7 +111,7 @@ payload_encoder_framework/
 
 ---
 
-### 6.1 Entry Point (`main.py`)
+### 6.1 Entry Point (`run.py`)
 
 #### Responsibilities
 
