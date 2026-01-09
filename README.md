@@ -4,7 +4,7 @@
 
 1. [Overview](#1-overview)  
 2. [Objectives](#2-objectives)  
-3. [Non-Goals](#3-non-goals)  
+3. [Installation](#3-installation)  
 4. [Architecture Overview](#4-architecture-overview)  
 5. [Project Structure](#5-project-structure)  
 6. [Component Breakdown](#6-component-breakdown)  
@@ -55,18 +55,18 @@ The primary goals of this project are:
 
 ---
 
-## 3. Non-Goals
+## 3. Installation
 
-This framework explicitly does **NOT**:
+```bash
 
-- Execute system commands
-- Interact with the OS or network
-- Perform exploitation
-- Perform real malware analysis
-- Evade real security products
+# Clone the repository
+git clone https://github.com/BenwinbBenny/Payload-Encoder-Obfuscation-Framework.git
+cd Payload-Encoder-Obfuscation-Framework
 
-It is **not** a red-team tool.
+#After installing dependencies and activating the virtual environment, run the framework using `run.py`.
+python3 run.py
 
+```
 ---
 
 ## 4. Architecture Overview
