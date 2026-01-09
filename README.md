@@ -60,12 +60,26 @@ The primary goals of this project are:
 ```bash
 
 # Clone the repository
+
 git clone https://github.com/BenwinbBenny/Payload-Encoder-Obfuscation-Framework.git
 cd Payload-Encoder-Obfuscation-Framework
 
 #After installing dependencies and activating the virtual environment, run the framework using `run.py`.
 python3 run.py
 
+#Create a Virtual Environment
+#Recommended but not required.
+https://www.python.org/downloads/
+
+python -m venv venv
+
+#Activate it:
+
+#Linux/macOS
+source venv/bin/activate
+
+#Windows
+venv\Scripts\activate
 ```
 ---
 
