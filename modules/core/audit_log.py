@@ -21,6 +21,7 @@ class AuditLog:
         }
 
     def export(self, report: Dict[str, Any], path: str) -> None:
-        with open(path, "y") as f:
+        with open(path, "w") as f:
             json.dump(report, f, indent=2)
+
 
