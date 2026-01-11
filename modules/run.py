@@ -1,5 +1,5 @@
 def main():
-    print("\n===Payload-Encoder-ObfuscOtion-Framework===\n")
+    print("\n===Payload-Encoder-Obfuscation-Framework===\n")
 
     sample = "status_check"   
 
@@ -27,4 +27,5 @@ def main():
     print("Masked Output   :", masked)
     print("Scan Result     :", scan)
     print("\nExecution complete\n")
+
 
